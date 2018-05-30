@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="my-app">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="node_modules/onsenui/css/onsenui.css"/>
+  <link rel="stylesheet" href="node_modules/onsenui/css/onsen-css-components.css"/>
+  <script src="node_modules/onsenui/js/angular.min.js"></script>
+  <script src="node_modules/onsenui/js/onsenui.min.js"></script>
+  <script src="node_modules/onsenui/js/angular-onsenui.min.js"></script>
+
+  <script>
+  </script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  	})();
+
+   window.onload = function() {
+    document.getElementById('newRecordingHeader').style.display='none'
+    document.getElementById('newRecordingBody').style.display='none'
+    document.getElementById('greenTick').style.display='none'
+    document.getElementById('controls').style.display='none'
+  };
+
+  var refreshRecording = function() {
+    document.getElementById('newRecordingHeader').style.display='block'
+    document.getElementById('newRecordingBody').style.display='block'
+    document.getElementById('deleteRecordingHeader').style.display='none'
+    document.getElementById('deleteRecording').style.display='none'
+  };
+
+  var updateRecording = function() {
+  var dialog = document.getElementById('updateRecording-dialog');
+
+  if (dialog) {
+    dialog.show();
+  } else {
+    ons.createElement('updateRecording.html', { append: true })
+      .then(function(dialog) {
+        dialog.show();
+      });
+  }
+  };
+  var deleteDialog_updateRecording = function(id) {
+    document
+      .getElementById(id)
+      .hide();
+      document.getElementById('newRecordingHeader').style.display='none'
+      document.getElementById('newRecordingBody').style.display='none'
+      ons.notification.toast('Call information deleted.', {timeout: 2500})
+  };
+  var cancelDialog_updateRecording = function(id) {
+    document
+      .getElementById(id)
+      .hide();
+  };
+  var okDialog_updateRecording = function(id) {
+    document
+      .getElementById(id)
+      .hide();
+  };
+
+
+
+  var deleteRecording = function() {
+  var dialog = document.getElementById('deleteRecording-dialog');
+
+  if (dialog) {
+    dialog.show();
+  } else {
+    ons.createElement('deleteRecording.html', { append: true })
+      .then(function(dialog) {
+        dialog.show();
+      });
+  }
+  };
+  var deleteDialog_deleteRecording = function(id) {
+    document
+      .getElementById(id)
+      .hide();
+      document.getElementById('deleteRecordingHeader').style.display='none'
+      document.getElementById('deleteRecording').style.display='none'
+      ons.notification.toast('Saving recording to Salesforce.', {timeout: 2500})
+      ons.notification.toast('Call information deleted.', {timeout: 2500})
+  };
+  var cancelDialog_deleteRecording = function(id) {
+    document
+      .getElementById(id)
+      .hide();
+  };
+  var okDialog_deleteRecording = function(id) {
+    document
+      .getElementById(id)
+      .hide();
+      ons.notification.toast('Saving recording to Salesforce.', {timeout: 2500})
+      ons.notification.toast('Recording saved.', {timeout: 2500})
+  };
+
+  </script>
+
+  <ons-page ng-controller="PageController as page">
+
+  <title>Landing Page Demo</title>
+
+	<ons-toolbar>
+		<div class="left">
+			<ons-toolbar-button onclick="prev()">
+			<ons-icon size="35px" icon="md-chevron-left"></ons-icon>
+			</ons-toolbar-button>
+		</div>
+		<div class="center">Freedom Mobile</div>
+		<div class="right">
+			<ons-toolbar-button onclick="next()">
+			<ons-icon size="35px" icon="md-chevron-right"></ons-icon>
+			</ons-toolbar-button>
+		</div>
+	</ons-toolbar>
+
+	<ons-carousel fullscreen auto-scroll  id="carousel">
+
+
+	<ons-carousel-item style="background-color: #373B44;">
+      <div style="text-align: center; font-size: 30px; margin-top: 7px; margin-bottom: 10px; color: #fff;">
+        Call Recording
+      </div>
+
+      <ons-card>
+        <img src="./images/dubber.png" alt="Dubber Logo" style="width: 80%; display: block; margin-left: auto; margin-right: auto;">
+        <div class="content">
+          <section style="padding: 8px" align="center">
+              <p></p>
+                <a href="index.php?&amp;CCRtoken=startRecording" method="get">
+                <ons-button modifier="quiet" type="submit">Start</ons-button></a>
+                <a href="index.php?&amp;CCRtoken=pauseRecording" method="get">
+                <ons-button modifier="quiet">Pause</ons-button></a>
+                <a href="index.php?&amp;CCRtoken=resumeRecording" method="get">
+                <ons-button modifier="quiet">Resume</ons-button></a>
+                <a href="index.php?&amp;CCRtoken=stopRecording" method="get">
+                <ons-button modifier="quiet">Stop</ons-button></a>
+          </section>
+        </div>
+      </ons-card>
+      <ons-card>
+          <div class="title">My Recordings &emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;<ons-button style="text-align: right;" modifier="quiet" onclick="refreshRecording()">Refresh</ons-button></div>
+        <ons-list>
+          <div class="content">
+            <ons-list-header id='newRecordingHeader'>Today</ons-list-header>
+            <ons-list-item id='newRecordingBody' modifier="chevron" tappable onclick="updateRecording()">Dave Lloyd</ons-list-item>
+            <ons-list-header id='deleteRecordingHeader'>Yesterday</ons-list-header>
+              <ons-list-item id='deleteRecording' modifier="chevron" tappable onclick="deleteRecording()">+61 2 8424 2955</ons-list-item> 
+            <ons-list-header>Friday</ons-list-header>
+            <ons-list-item modifier="chevron">+61 2 8424 2924</ons-list-item>
+            <ons-list-header>Thursday</ons-list-header>
+            <ons-list-item modifier="chevron">‭+61 4 1732 8435</ons-list-item>
+          </div>
+        </ons-list>
+      </ons-card>
+    </ons-carousel-item>
+
+  </ons-carousel>
+
+</ons-page>
+
+<template id="deleteRecording.html">
+  <ons-dialog id="deleteRecording-dialog">
+    <div style="text-align: left; padding: 10px;">
+      <p>
+        <ons-list-item><img src="./images/dubber.png" alt="Onsen UI" style="width: 80%; display: block; margin-left: auto; margin-right: auto;"></ons-list-item>
+        <ons-list-item>
+          <audio controls>
+            <source src="horse.ogg" type="audio/ogg">
+            <source src="horse.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+          </audio>
+        </ons-list-item>
+        <ons-list-item tappable onclick="">Time: 1:47pm</ons-list-item>
+        <ons-list-item tappable onclick="">Duration: 0h 3m 29s</ons-list-item>
+        <ons-list-item tappable onclick="">Number: <a href="iris://call/number/+61-2-8424-2955"> +61 2 8424 2955</a></ons-list-item>
+        <ons-list-item tappable onclick="">Save to Salesforce?&emsp;&emsp;&emsp;<ons-switch></ons-switch></ons-list-item>
+        </ons-list-item>
+      </p>
+     </div>
+     <div align="center" padding="10px;">
+      <p>
+        <ons-button modifier="quiet" onclick="deleteDialog_deleteRecording('deleteRecording-dialog')">Delete</ons-button>
+        <ons-button modifier="quiet" onclick="cancelDialog_deleteRecording('deleteRecording-dialog')">Cancel</ons-button>
+        <ons-button modifier="quiet" onclick="okDialog_deleteRecording('deleteRecording-dialog')">Close</ons-button>
+      </p>
+    </div>
+  </ons-dialog>
+</template>
+<template id="updateRecording.html">
+  <ons-dialog id="updateRecording-dialog">
+    <div style="text-align: left; padding: 10px;">
+      <p>
+        <ons-list-item><img src="./images/dubber.png" alt="Onsen UI" style="width: 80%; display: block; margin-left: auto; margin-right: auto;"></ons-list-item>
+        <ons-list-item>
+          <audio controls>
+            <source src="horse.ogg" type="audio/ogg">
+            <source src="horse.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+          </audio>
+        </ons-list-item>
+        <ons-list-item tappable onclick="">Time: Calculating...</ons-list-item>
+        <ons-list-item tappable onclick="">Duration: Calculating...</ons-list-item>
+        <ons-list-item tappable onclick="">Number: <a href="iris://call/number/+61-417-328-435">&nbsp;+61 417 328 435</a></ons-list-item>
+        <ons-list-item tappable onclick="">Save to Salesforce?&emsp;&emsp;&emsp;<ons-switch></ons-switch></ons-list-item>
+      </p>
+     </div>
+     <div align="center" padding="10px;">
+      <p>
+        <ons-button modifier="quiet" onclick="deleteDialog_updateRecording('updateRecording-dialog')">Delete</ons-button>
+        <ons-button modifier="quiet" onclick="cancelDialog_updateRecording('updateRecording-dialog')">Cancel</ons-button>
+        <ons-button modifier="quiet" onclick="okDialog_updateRecording('updateRecording-dialog')">Close</ons-button>
+      </p>
+    </div>
+  </ons-dialog>
+</template>
+
+</body>
+</html>
